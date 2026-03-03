@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="たまごっち">
 <meta name="theme-color" content="#1a1a2e">
-<title>がんばれ！ときのすけくんせんよう たまごっち</title>
+<title>がんばれ！たまごっち</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -413,11 +413,12 @@ var ALLCLEAR_MESSAGES = [
   "ときのすけくん は きょうも チャンピオン！ぜんぶ クリア おめでとう！",
 ];
 
-function getGreetingPrefix(){
+function getGreetingPrefix(name){
+  var n=name||"ときのすけくん";
   var h=new Date().getHours();
-  if(h<10)return "🌅 おはよう ときのすけくん！";
-  if(h<17)return "☀️ ときのすけくん こんにちは！";
-  return "🌙 ときのすけくん こんばんは！";
+  if(h<10)return "🌅 おはよう "+n+"！";
+  if(h<17)return "☀️ "+n+" こんにちは！";
+  return "🌙 "+n+" こんばんは！";
 }
 
 // 253 unique seasonal trivia messages (Mar 3 - Nov 11) for 小学校受験対策
@@ -431,7 +432,8 @@ var DAILY_TRIVIA={"3-3":"きょうは ひなまつり！おひなさまは お�
 "10-1":"じゅうがつ！あきが ふかまって きたよ。こうようが きれい だね🍁","10-2":"うんどうかいの きせつ！かけっこ・つなひき・たまいれ どれが すき？🏅","10-3":"あきの そらは たかくて すんでいるよ。「てんたかく うま こゆる あき」🐴","10-4":"しかは あきに「ピーッ」となくよ。ならの しかは にほんの てんねんきねんぶつ🦌","10-5":"リンゴは あきの くだもの。あかくなるのは たいようの おかげだよ🍎","10-6":"わたりどりが やってくるよ。ハクチョウは シベリアから にほんに くるんだ🦢","10-7":"マツタケは あきの きのこの おうさま。いいにおいが する たかい きのこ🍄","10-8":"カマキリの たまごは あわの かたまり。「らんしょう」っていうよ🥚","10-9":"あきばれ っていう ことば しってる？くもが なくて そらが すっきり はれること☀️","10-10":"くりごはんは あきの あじ。ホクホクして あまいよ🌰","10-11":"コスモスは「あきざくら」とも いうよ。うちゅうの コスモスとは ちがうんだ🌸","10-12":"きょうは スポーツのひ！からだを うごかすのは たいせつ だよ🏅","10-13":"みのむしは はっぱや えだで ふくろを つくるよ。なかで さなぎに なるんだ🍂","10-14":"あきの ゆうやけは きれいだよ。そらが あかく オレンジに そまるね🌅","10-15":"さつまいもは やくと あまくなるよ。やきいも おいしいね🍠","10-16":"カキの みは さいしょ みどり。あきに なると オレンジに なるよ🟠","10-17":"もみじがりは あきに もみじを みにいく こと。にほんの ぶんか だね🍁","10-18":"あきの たべものは しゅうかくの めぐみ。おこめ・くり・さつまいも🌾","10-19":"ふくろうは よるに めが みえるよ。くびが ぐるっと まわるんだ🦉","10-20":"じゅうさんや って しってる？おつきみを もう いっかい する ひ だよ🌕","10-21":"どんぐりを つかって こまを つくれるよ。つまようじを さしてね🌳","10-22":"きんぎょは もともと フナ なんだよ。ちゅうごくで あかい フナを そだてたんだ🐟","10-23":"そうこう っていう きせつだよ。つゆが おりて あさ つめたく なるよ❄️","10-24":"ナナカマドの みは あかいよ。ことりが たべに くるんだ🐦","10-25":"さざんかは あきから ふゆに さくはな。つばきに にてるけど はなびらが ちるよ🌸","10-26":"いちょうの はっぱが きいろく なってきたよ。おうぎの かたちだね🍂","10-27":"あきの よぞらは ほしが きれいにみえるよ。オリオンざ さがしてみて⭐","10-28":"かぼちゃは もともと アメリカの やさいだよ。ハロウィンで くりぬくよね🎃","10-29":"あと ３にちで ハロウィン！おばけの かそうを するおまつり だよ👻","10-30":"ハロウィンは あした！「トリック・オア・トリート」は おかしをくれなきゃ いたずらするぞ🎃","10-31":"きょうは ハロウィン！もともとは あきの しゅうかくを いわう おまつり だったよ🎃",
 "11-1":"じゅういちがつ！あきの おわり。もみじが まっかに そまっているね🍁","11-2":"おちばで やきいもを つくるよ。はっぱが かわくと いいもえるんだ🍠","11-3":"きょうは ぶんかのひ！ほんをよんだり えを かいたり ぶんかに ふれる ひ📚","11-4":"わたりどりの ハクチョウが みずうみに やってきたよ。しろくて おおきいね🦢","11-5":"きくの はなは あきの おわりに さくよ。にほんの くにの はな なんだ🌸","11-6":"もうすぐ しけん！いままで がんばった こと ぜんぶが ちからに なるよ💪","11-7":"りすは ふゆに そなえて どんぐりを かくすよ。たくわえの てんさい だね🐿️","11-8":"しけんまで あと ３にち！ときのすけくんは まいにち がんばってきた すごいやつだ⭐","11-9":"あと ２にち！じぶんを しんじて。パパもママも ずっと おうえん してるよ🌟","11-10":"あした しけんだ！きょうは はやく ねて ぐっすり やすもうね。だいじょうぶ😊","11-11":"きょうが ほんばん！ときのすけくんなら だいじょうぶ！いつもどおり がんばれ🏫✨"};
 
-var EXAM_DATE=new Date(2026,10,11);
+// Default exam date (can be changed in settings)
+var DEFAULT_EXAM="2026-11-11";
 
 // Countdown encouragement messages - 253 daily unique messages (Mar 3 - Nov 11)
 var COUNTDOWN_MSGS={
@@ -756,8 +758,10 @@ var DAY_READINGS=["",
 ];
 
 function ds(d){var x=d||new Date();return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
-function daysLeft(){var n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.ceil((EXAM_DATE-t)/864e5);}
+function daysLeft(examStr){var ed=examStr||DEFAULT_EXAM;var p=ed.split("-");var ex=new Date(+p[0],+p[1]-1,+p[2]);var n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.ceil((ex-t)/864e5);}
 function streakBonus(s){return s>=30?3:s>=7?2:s>=3?1:0;}
+// Replace "ときのすけくん" with child's name in any message
+function pn(text,name){if(!name||name==="ときのすけくん")return text;return text.replace(/ときのすけくん/g,name);}
 function pick(col){
   var ids=new Set(col.map(function(c){return c.id;}));
   var av=CREATURES.filter(function(c){return !ids.has(c.id);});
@@ -821,6 +825,8 @@ function migrateFields(d){
   if(!d.unlockedBadges)d.unlockedBadges=[];
   if(!d.stampHistory)d.stampHistory=[];
   if(d.quizAnsweredDate===undefined)d.quizAnsweredDate=null;
+  if(!d.profile)d.profile={childName:"ときのすけくん",gender:"boy",schoolName:"けいおうよこはましょとうぶ",examDate:"2026-11-11"};
+  if(!d.profile.examDate)d.profile.examDate="2026-11-11";
   return d;
 }
 async function save(d){try{lsSet("tamago-v5",JSON.stringify(d));}catch(e){}}
@@ -843,6 +849,7 @@ function mkDef(){
     streakDays:0,lastCompletedDate:null,
     dailyNote:"",dailyNoteDate:null,completedDates:[],
     unlockedBadges:[],stampHistory:[],quizAnsweredDate:null,
+    profile:{childName:"ときのすけくん",gender:"boy",schoolName:"けいおうよこはましょとうぶ",examDate:"2026-11-11"},
   };
 }
 
@@ -1038,7 +1045,7 @@ function Calendar({completedDates}){
 }
 
 // ==================== ANALOG CLOCK ====================
-function AnalogClock({now,timeStr}){
+function AnalogClock({now,timeStr,childName}){
   var h=now.getHours()%12,m=now.getMinutes(),s=now.getSeconds();
   var hourDeg=(h*30)+(m*0.5);
   var minDeg=m*6;
@@ -1066,7 +1073,7 @@ function AnalogClock({now,timeStr}){
   var mo=now.getMonth()+1,dy=now.getDate();
   var triviaKey=mo+"-"+dy;
   var trivia=DAILY_TRIVIA[triviaKey]||"きょうも いちにち がんばろうね！✨";
-  var greeting=getGreetingPrefix();
+  var greeting=getGreetingPrefix(childName);
 
   return (
     <div style={{marginTop:"10px"}}>
@@ -1105,8 +1112,8 @@ function AnalogClock({now,timeStr}){
       }}>
         <div style={{position:"absolute",top:"-8px",left:"24px",width:"0",height:"0",borderLeft:"8px solid transparent",borderRight:"8px solid transparent",borderBottom:"8px solid rgba(255,255,255,0.12)"}}/>
         <div style={{display:"flex",alignItems:"flex-start",gap:"8px"}}>
-          <div style={{flex:1,minWidth:0,wordBreak:"break-word",overflowWrap:"anywhere"}}>💡 {trivia}</div>
-          <button onClick={function(){speak(greeting.replace(/[🌅☀️🌙]/g,"")+" "+trivia.replace(/[^\u3000-\u9FFFa-zA-Z0-9０-９\u3040-\u309F\u30A0-\u30FF！？、。・ー～〜 ]/g,""));}}
+          <div style={{flex:1,minWidth:0,wordBreak:"break-word",overflowWrap:"anywhere"}}>💡 {pn(trivia,childName)}</div>
+          <button onClick={function(){speak(greeting.replace(/[🌅☀️🌙]/g,"")+" "+pn(trivia,childName).replace(/[^\u3000-\u9FFFa-zA-Z0-9０-９\u3040-\u309F\u30A0-\u30FF！？、。・ー～〜 ]/g,""));}}
             style={{flexShrink:0,background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"50%",width:"32px",height:"32px",fontSize:"15px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             🔊
           </button>
@@ -1117,14 +1124,16 @@ function AnalogClock({now,timeStr}){
 }
 
 // ==================== INFO BAR ====================
-function InfoBar({dailyNote,onNoteChange,onSettingsClick,streakDays}){
+function InfoBar({dailyNote,onNoteChange,onSettingsClick,streakDays,profile}){
   var [now,setNow]=useState(new Date());
   var [editing,setEditing]=useState(false);
   var [noteText,setNoteText]=useState(dailyNote||"");
   useEffect(function(){var t=setInterval(function(){setNow(new Date());},1000);return function(){clearInterval(t);};},[]);
   useEffect(function(){setNoteText(dailyNote||"");},[dailyNote]);
   var dateStr=ds(now),holiday=HOLIDAYS_2026[dateStr]||null;
-  var dl=daysLeft(),weekday=WEEKDAYS[now.getDay()];
+  var pr=profile||{childName:"ときのすけくん",schoolName:"",examDate:DEFAULT_EXAM};
+  var childName=pr.childName||"ときのすけくん";
+  var dl=daysLeft(pr.examDate),weekday=WEEKDAYS[now.getDay()];
   var month=now.getMonth()+1,day=now.getDate();
   var timeStr=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
   var sb=streakBonus(streakDays);
@@ -1141,11 +1150,12 @@ function InfoBar({dailyNote,onNoteChange,onSettingsClick,streakDays}){
         <div style={{fontSize:"15px",opacity:0.7,paddingBottom:"2px"}}>({weekday})</div>
       </div>
       {/* Analog Clock + Digital Clock */}
-      <AnalogClock now={now} timeStr={timeStr}/>
+      <AnalogClock now={now} timeStr={timeStr} childName={childName}/>
       {holiday&&(<div style={{marginTop:"8px",fontSize:"15px",background:"linear-gradient(135deg,rgba(255,200,50,0.25),rgba(255,150,50,0.15))",display:"inline-block",borderRadius:"10px",padding:"4px 12px",border:"1px solid rgba(255,200,50,0.3)"}}>きょうは <b>{holiday}</b> だよ！</div>)}
+      {pr.schoolName?(
       <div style={{marginTop:"12px",background:dl<=7?"linear-gradient(135deg,rgba(255,50,50,0.3),rgba(255,80,80,0.15))":dl<=30?"linear-gradient(135deg,rgba(255,140,50,0.25),rgba(255,100,50,0.12))":"rgba(255,255,255,0.06)",borderRadius:"18px",padding:"14px 16px",border:dl<=7?"1px solid rgba(255,80,80,0.4)":dl<=30?"1px solid rgba(255,140,50,0.3)":"1px solid rgba(255,255,255,0.08)"}}>
         <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"8px"}}>
-          <span style={{fontSize:"13px",opacity:0.8}}>🏫 けいおうよこはましょとうぶ</span>
+          <span style={{fontSize:"13px",opacity:0.8}}>🏫 {pr.schoolName}</span>
         </div>
         <div style={{display:"flex",alignItems:"baseline",gap:"6px",marginBottom:"8px"}}>
           <span style={{fontSize:"14px",opacity:0.9}}>しけんまで</span>
@@ -1153,17 +1163,18 @@ function InfoBar({dailyNote,onNoteChange,onSettingsClick,streakDays}){
           <span style={{fontSize:"16px",fontWeight:"800",opacity:0.9}}>にち</span>
         </div>
         <div style={{display:"flex",alignItems:"flex-start",gap:"8px"}}>
-          <div style={{flex:1,fontSize:"13px",lineHeight:"1.6",color:dl<=7?"#FFB3B3":dl<=30?"#FFD9A0":"rgba(255,255,255,0.7)",fontFamily:"'Hiragino Maru Gothic Pro',sans-serif",wordBreak:"keep-all"}}>{getCountdownMsg(dl)}</div>
-          <button onClick={function(){speak("しけんまで あと "+dl+"にち。"+getCountdownMsg(dl).replace(/[^\u3000-\u9FFFa-zA-Z0-9０-９\u3040-\u309F\u30A0-\u30FF！？、。・ー～〜 ]/g,""));}}
+          <div style={{flex:1,fontSize:"13px",lineHeight:"1.6",color:dl<=7?"#FFB3B3":dl<=30?"#FFD9A0":"rgba(255,255,255,0.7)",fontFamily:"'Hiragino Maru Gothic Pro',sans-serif",wordBreak:"keep-all"}}>{pn(getCountdownMsg(dl),childName)}</div>
+          <button onClick={function(){speak("しけんまで あと "+dl+"にち。"+pn(getCountdownMsg(dl),childName).replace(/[^\u3000-\u9FFFa-zA-Z0-9０-９\u3040-\u309F\u30A0-\u30FF！？、。・ー～〜 ]/g,""));}}
             style={{flexShrink:0,background:"rgba(255,255,255,0.15)",border:"none",borderRadius:"50%",width:"30px",height:"30px",fontSize:"14px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"0px"}}>
             🔊
           </button>
         </div>
-        {/* Progress bar: Mar 3 to Nov 11 = 253 days total */}
+        {/* Progress bar */}
         <div style={{marginTop:"10px",background:"rgba(0,0,0,0.2)",borderRadius:"6px",height:"6px",overflow:"hidden"}}>
           <div style={{height:"100%",borderRadius:"6px",background:dl<=7?"linear-gradient(90deg,#FF6B6B,#FF4444)":dl<=30?"linear-gradient(90deg,#FFB347,#FF8E53)":"linear-gradient(90deg,#7FDBFF,#4A90D9)",width:Math.max(0,Math.min(100,(253-dl)/253*100))+"%",transition:"width 0.5s"}}/>
         </div>
       </div>
+      ):null}
       {sb>0&&(<div style={{marginTop:"8px",fontSize:"14px",background:"linear-gradient(135deg,rgba(255,107,53,0.25),rgba(255,179,0,0.15))",display:"inline-block",borderRadius:"10px",padding:"4px 12px",border:"1px solid rgba(255,107,53,0.3)"}}>🔥 {streakDays}にち れんぞく！ ボーナス +{sb} ⭐</div>)}
       <div style={{marginTop:"12px"}}>
         <div style={{fontSize:"12px",opacity:0.5,marginBottom:"4px"}}>📋 きょうの もくひょう</div>
@@ -1215,10 +1226,10 @@ function Egg({stamps,target,colorIndex,onHatch}){
 }
 
 // ==================== HATCH SCENE (GACHA STYLE) ====================
-function HatchScene({creature,onComplete}){
+function HatchScene({creature,onComplete,childName}){
   // Phases: 0=egg shake, 1=crack, 2=gacha ball color reveal, 3=creature reveal, 4=done
   var [phase,setPhase]=useState(0);
-  var joyMsg=useRef(HATCH_MESSAGES[Math.floor(Math.random()*HATCH_MESSAGES.length)]);
+  var joyMsg=useRef(pn(HATCH_MESSAGES[Math.floor(Math.random()*HATCH_MESSAGES.length)],childName));
   var isRare=creature.rarity>=2;var isSuperRare=creature.rarity>=3;
   var ballColor=isSuperRare?"linear-gradient(135deg,#FFD700,#FF6B35)":isRare?"linear-gradient(135deg,#4A90D9,#90CAF9)":"linear-gradient(135deg,#4CAF50,#81C784)";
   var rarityLabel=isSuperRare?"🌈 スーパーレア！！":isRare?"💎 レア！":"⭐ ノーマル";
@@ -1348,8 +1359,19 @@ function Zukan({collected,onBack}){
 }
 
 // ==================== SETTINGS ====================
-function Settings({onBack,onReset}){
+function Settings({onBack,onReset,profile,onProfileChange}){
   var [pin,setPin]=useState("");var [authed,setAuthed]=useState(false);
+  var [pName,setPName]=useState((profile&&profile.childName)||"ときのすけくん");
+  var [pGender,setPGender]=useState((profile&&profile.gender)||"boy");
+  var [pSchool,setPSchool]=useState((profile&&profile.schoolName)||"");
+  var [pExam,setPExam]=useState((profile&&profile.examDate)||"2026-11-11");
+  var [saved,setSaved]=useState(false);
+
+  function handleSaveProfile(){
+    onProfileChange({childName:pName,gender:pGender,schoolName:pSchool,examDate:pExam});
+    setSaved(true);setTimeout(function(){setSaved(false);},2000);
+  }
+
   if(!authed){
     return (
       <div style={{minHeight:"100vh",background:"#F5F5F5",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px"}}>
@@ -1368,18 +1390,58 @@ function Settings({onBack,onReset}){
       </div>
     );
   }
+
+  var labelStyle={fontSize:"14px",fontWeight:"700",color:"#555",marginBottom:"4px",display:"block"};
+  var inputStyle={width:"100%",fontSize:"16px",padding:"10px 14px",borderRadius:"12px",border:"2px solid #E0E0E0",outline:"none",boxSizing:"border-box",marginBottom:"14px",fontFamily:"inherit"};
+
   return (
-    <div style={{minHeight:"100vh",background:"#F5F5F5",padding:"20px"}}>
+    <div style={{minHeight:"100vh",background:"#F5F5F5",padding:"20px",maxWidth:"600px",margin:"0 auto",boxSizing:"border-box"}}>
       <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"20px"}}>
         <button onClick={onBack} style={{background:"#fff",border:"none",borderRadius:"50%",width:"44px",height:"44px",fontSize:"22px",cursor:"pointer"}}>←</button>
         <h2 style={{margin:0,fontSize:"22px",fontWeight:"800"}}>⚙️ せってい（おとなよう）</h2>
       </div>
+
+      {/* Profile Settings */}
+      <div style={{background:"#fff",borderRadius:"20px",padding:"20px",marginBottom:"16px"}}>
+        <h3 style={{margin:"0 0 14px",fontSize:"17px"}}>👤 プロフィール</h3>
+
+        <label style={labelStyle}>おこさまの おなまえ</label>
+        <input type="text" value={pName} onChange={function(e){setPName(e.target.value);}} placeholder="ときのすけくん" style={inputStyle}/>
+
+        <label style={labelStyle}>せいべつ</label>
+        <div style={{display:"flex",gap:"10px",marginBottom:"14px"}}>
+          {[["boy","👦 おとこのこ"],["girl","👧 おんなのこ"]].map(function(g){
+            var active=pGender===g[0];
+            return (
+              <button key={g[0]} onClick={function(){setPGender(g[0]);}}
+                style={{flex:1,background:active?"linear-gradient(135deg,#4A90D9,#5BA3EC)":"#F5F5F5",color:active?"#fff":"#666",border:active?"2px solid #4A90D9":"2px solid #E0E0E0",borderRadius:"12px",padding:"10px",fontSize:"15px",fontWeight:"700",cursor:"pointer"}}>
+                {g[1]}
+              </button>
+            );
+          })}
+        </div>
+
+        <label style={labelStyle}>しぼうこう</label>
+        <input type="text" value={pSchool} onChange={function(e){setPSchool(e.target.value);}} placeholder="けいおうよこはましょとうぶ" style={inputStyle}/>
+
+        <label style={labelStyle}>しけんび</label>
+        <input type="date" value={pExam} onChange={function(e){setPExam(e.target.value);}} style={inputStyle}/>
+
+        <button onClick={handleSaveProfile}
+          style={{width:"100%",background:saved?"linear-gradient(135deg,#4CAF50,#66BB6A)":"linear-gradient(135deg,#4A90D9,#5BA3EC)",color:"#fff",border:"none",borderRadius:"14px",padding:"12px",fontSize:"16px",fontWeight:"800",cursor:"pointer",transition:"all 0.3s"}}>
+          {saved?"✅ ほぞん しました！":"💾 プロフィールを ほぞん"}
+        </button>
+      </div>
+
+      {/* How to use */}
       <div style={{background:"#fff",borderRadius:"20px",padding:"20px",marginBottom:"16px"}}>
         <h3 style={{margin:"0 0 8px",fontSize:"17px"}}>💡 つかいかた</h3>
         <p style={{fontSize:"14px",color:"#666",lineHeight:"1.8",margin:0}}>
           ホーム画面の「✏️ へんしゅう」ボタンで、きょうのミッションを自由に変えられます。よく使うミッションは「📚 ライブラリ」に登録しておくと、ワンタップで追加できます。
         </p>
       </div>
+
+      {/* Data reset */}
       <div style={{background:"#fff",borderRadius:"20px",padding:"20px"}}>
         <h3 style={{margin:"0 0 8px",fontSize:"17px",color:"#FF5252"}}>⚠️ データリセット</h3>
         <p style={{fontSize:"14px",color:"#888",margin:"0 0 12px"}}>すべてのデータを初期化します。</p>
@@ -1575,7 +1637,7 @@ function Dashboard({state,onBack}){
 }
 
 // ==================== DAILY QUIZ ====================
-function DailyQuiz({onClose,onCorrect,onWrong}){
+function DailyQuiz({onClose,onCorrect,onWrong,childName}){
   var now=new Date();
   var key=(now.getMonth()+1)+"-"+now.getDate();
   var quiz=DAILY_QUIZ[key];
@@ -1597,10 +1659,12 @@ function DailyQuiz({onClose,onCorrect,onWrong}){
   var question=quiz[0];var choices=quiz[1];var correct=quiz[2];
   var isCorrect=selected===correct;
 
+  var cName=childName||"ときのすけくん";
+
   function handleSelect(idx){
     if(answered)return;
     setSelected(idx);setAnswered(true);
-    if(idx===correct){playQuizCorrect();onCorrect();setTimeout(function(){speak("せいかい！すごいね ときのすけくん！");},500);}
+    if(idx===correct){playQuizCorrect();onCorrect();setTimeout(function(){speak("せいかい！すごいね "+cName+"！");},500);}
     else{playQuizWrong();if(onWrong)onWrong();setTimeout(function(){speak("ざんねん！こたえは "+choices[correct]+" だよ");},500);}
   }
 
@@ -1673,7 +1737,7 @@ function DailyQuiz({onClose,onCorrect,onWrong}){
               color:isCorrect?"#4CAF50":"#FF6B35",lineHeight:"1.6",
               fontFamily:"'Hiragino Maru Gothic Pro',sans-serif",
             }}>
-              {isCorrect?"せいかい！すごいね ときのすけくん！ +1⭐":"ざんねん！こたえは「"+choices[correct]+"」だよ。おぼえておこうね！"}
+              {isCorrect?"せいかい！すごいね "+cName+"！ +1⭐":"ざんねん！こたえは「"+choices[correct]+"」だよ。おぼえておこうね！"}
             </div>
             <button onClick={onClose} style={{
               background:isCorrect?"linear-gradient(135deg,#4CAF50,#66BB6A)":"linear-gradient(135deg,#FF6B35,#FF8E53)",
@@ -1780,8 +1844,8 @@ function MyRoom({collected,onBack}){
 }
 
 // ==================== ALL CLEAR OVERLAY ====================
-function AllClearOverlay({onDone}){
-  var msg=ALLCLEAR_MESSAGES[Math.floor(Math.random()*ALLCLEAR_MESSAGES.length)];
+function AllClearOverlay({onDone,childName}){
+  var msg=pn(ALLCLEAR_MESSAGES[Math.floor(Math.random()*ALLCLEAR_MESSAGES.length)],childName);
   useEffect(function(){var t=setTimeout(onDone,3500);return function(){clearTimeout(t);};},[]);
   var confetti=[];for(var i=0;i<15;i++){confetti.push(<div key={i} style={{position:"fixed",left:(Math.random()*100)+"%",top:"-10px",fontSize:(14+Math.random()*16)+"px",animation:"confetti-fall "+(2+Math.random()*2)+"s linear "+Math.random()*0.5+"s forwards"}}>{["🎉","⭐","✨","🎊","💪"][Math.floor(Math.random()*5)]}</div>);}
   return (
@@ -1867,7 +1931,7 @@ function TamagoHatch(){
   var up=useCallback(function(c){setState(function(p){return Object.assign({},p,c);});},[]);
 
   if(!loaded||!state){
-    return (<div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(180deg,#E8F5E9,#FFF8E1)",gap:"16px"}}><div style={{fontSize:"70px",animation:"egg-float 2s ease-in-out infinite"}}>🥚</div><div style={{fontSize:"18px",fontWeight:"900",color:"#5D4037",fontFamily:"'Hiragino Maru Gothic Pro',sans-serif",animation:"pulse-text 1.5s infinite",textAlign:"center",lineHeight:"1.6"}}>がんばれ！<br/>ときのすけくんせんよう<br/>たまごっち</div><div style={{fontSize:"13px",color:"#999"}}>よみこみちゅう...</div></div>);
+    return (<div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(180deg,#E8F5E9,#FFF8E1)",gap:"16px"}}><div style={{fontSize:"70px",animation:"egg-float 2s ease-in-out infinite"}}>🥚</div><div style={{fontSize:"18px",fontWeight:"900",color:"#5D4037",fontFamily:"'Hiragino Maru Gothic Pro',sans-serif",animation:"pulse-text 1.5s infinite",textAlign:"center",lineHeight:"1.6"}}>がんばれ！たまごっち</div><div style={{fontSize:"13px",color:"#999"}}>よみこみちゅう...</div></div>);
   }
 
   var todayTasks=state.todayTasks||[];
@@ -1881,7 +1945,7 @@ function TamagoHatch(){
     else{
       completed.push(taskId);stamps+=1;total+=1;
       playTaskSound();
-      var msg=TASK_MESSAGES[Math.floor(Math.random()*TASK_MESSAGES.length)];
+      var msg=pn(TASK_MESSAGES[Math.floor(Math.random()*TASK_MESSAGES.length)],state.profile&&state.profile.childName);
       setToastMsg(msg);if(toastTimer.current)clearTimeout(toastTimer.current);
       toastTimer.current=setTimeout(function(){setToastMsg(null);},2500);
     }
@@ -1927,18 +1991,18 @@ function TamagoHatch(){
     up({todayTasks:newTasks,todayTasksDate:ds(),todayCompleted:finalCompleted});
   }
 
-  if(hatching&&hatchCreature)return <HatchScene creature={hatchCreature} onComplete={handleHatchDone}/>;
+  if(hatching&&hatchCreature)return <HatchScene creature={hatchCreature} onComplete={handleHatchDone} childName={state.profile&&state.profile.childName}/>;
   if(screen==="zukan")return <Zukan collected={state.collected} onBack={function(){setScreen("home");}}/>;
   if(screen==="myroom")return <MyRoom collected={state.collected} onBack={function(){setScreen("home");}}/>;
   if(screen==="badges")return <BadgeScreen unlockedBadges={state.unlockedBadges} onBack={function(){setScreen("home");}}/>;
   if(screen==="dashboard")return <Dashboard state={state} onBack={function(){setScreen("home");}}/>;
-  if(screen==="settings")return (<Settings onBack={function(){setScreen("home");}} onReset={function(){setState(mkDef());setScreen("home");}}/>);
+  if(screen==="settings")return (<Settings onBack={function(){setScreen("home");}} onReset={function(){setState(mkDef());setScreen("home");}} profile={state.profile} onProfileChange={function(p){up({profile:p});}}/>);
 
   return (
     <div style={{minHeight:"100vh",background:"linear-gradient(180deg,#E8F5E9 0%,#FFF8E1 40%,#FFF3E0 70%,#FFECB3 100%)",padding:"16px",fontFamily:"'Hiragino Maru Gothic Pro','Rounded Mplus 1c',-apple-system,sans-serif",maxWidth:"600px",margin:"0 auto",overflow:"hidden",boxSizing:"border-box",width:"100%"}}>
       <style>{"@keyframes egg-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes shake-soft{0%,100%{transform:rotate(0)}25%{transform:rotate(1.5deg)}75%{transform:rotate(-1.5deg)}}@keyframes shake-medium{0%,100%{transform:rotate(0)}20%{transform:rotate(3deg)}40%{transform:rotate(-3deg)}60%{transform:rotate(2deg)}80%{transform:rotate(-2deg)}}@keyframes shake-hard{0%,100%{transform:rotate(0) scale(1)}10%{transform:rotate(5deg) scale(1.02)}20%{transform:rotate(-5deg) scale(1.02)}30%{transform:rotate(5deg) scale(1.01)}40%{transform:rotate(-5deg) scale(1.01)}50%{transform:rotate(4deg) scale(1.02)}60%{transform:rotate(-4deg) scale(1.02)}70%{transform:rotate(3deg) scale(1.01)}80%{transform:rotate(-3deg) scale(1.01)}90%{transform:rotate(2deg) scale(1)}}@keyframes glow-pulse{0%,100%{filter:drop-shadow(0 0 10px rgba(255,215,0,.3))}50%{filter:drop-shadow(0 0 25px rgba(255,215,0,.7))}}@keyframes pulse-text{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.03)}}@keyframes appear-bounce{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}@keyframes egg-crack{0%{transform:scale(1)}30%{transform:scale(1.2)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(0);opacity:0}}@keyframes flash{0%,100%{opacity:.3}50%{opacity:1}}@keyframes confetti-fall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}@keyframes toast-appear{0%{opacity:0;transform:translateX(-50%) translateY(30px) scale(.8)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}@keyframes spin-slow{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes badge-pop{0%{opacity:0;transform:translateX(-50%) scale(0.3)}40%{transform:translateX(-50%) scale(1.15)}100%{opacity:1;transform:translateX(-50%) scale(1)}}@keyframes fade-up{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}*{-webkit-tap-highlight-color:transparent}button:active{transform:scale(0.96)!important;transition:transform 0.1s}"}</style>
 
-      <InfoBar dailyNote={state.dailyNote} onNoteChange={function(n){up({dailyNote:n,dailyNoteDate:ds()});}} onSettingsClick={function(){setScreen("settings");}} streakDays={state.streakDays}/>
+      <InfoBar dailyNote={state.dailyNote} onNoteChange={function(n){up({dailyNote:n,dailyNoteDate:ds()});}} onSettingsClick={function(){setScreen("settings");}} streakDays={state.streakDays} profile={state.profile}/>
 
       <div style={{display:"flex",gap:"8px",marginBottom:"16px",flexWrap:"wrap",animation:"fade-up 0.4s ease-out"}}>
         <div style={{flex:"1 1 0",minWidth:"70px",background:"#fff",borderRadius:"18px",padding:"12px 8px",textAlign:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.05)"}}>
@@ -2026,10 +2090,10 @@ function TamagoHatch(){
       <div style={{height:"50px"}}/>
 
       {toastMsg&&(<div style={{position:"fixed",bottom:"30px",left:"50%",transform:"translateX(-50%)",background:"linear-gradient(135deg,#FF6B35,#FF8E53)",color:"#fff",borderRadius:"22px",padding:"14px 26px",fontSize:"17px",fontWeight:"800",boxShadow:"0 8px 30px rgba(255,107,53,0.4)",zIndex:500,textAlign:"center",maxWidth:"88%",animation:"toast-appear 0.4s ease-out",fontFamily:"'Hiragino Maru Gothic Pro',sans-serif"}}>{toastMsg}</div>)}
-      {showAllClear&&<AllClearOverlay onDone={function(){setShowAllClear(false);}}/>}
+      {showAllClear&&<AllClearOverlay onDone={function(){setShowAllClear(false);}} childName={state.profile&&state.profile.childName}/>}
       {showEditor&&<MissionEditor todayTasks={todayTasks} presets={state.presets||DEFAULT_PRESETS} onSave={handleSaveTasks} onClose={function(){setShowEditor(false);}} onPresetsChange={function(p){up({presets:p});}}/>}
       {timerTask&&<TimerOverlay seconds={timerTask.timer} label={timerTask.label} onComplete={function(){setTimerTask(null);}} onCancel={function(){setTimerTask(null);}}/>}
-      {showQuiz&&<DailyQuiz onClose={function(){setShowQuiz(false);}} onCorrect={function(){
+      {showQuiz&&<DailyQuiz onClose={function(){setShowQuiz(false);}} childName={state.profile&&state.profile.childName} onCorrect={function(){
         var stamps=state.currentEggStamps+1;var total=state.totalStamps+1;
         up({quizAnsweredDate:ds(),currentEggStamps:stamps,totalStamps:total});
       }} onWrong={function(){
@@ -2041,7 +2105,7 @@ function TamagoHatch(){
           <div>
             <div style={{fontSize:"12px",color:"rgba(255,255,255,0.8)",fontWeight:"700"}}>🏅 バッジ ゲット！</div>
             <div style={{fontSize:"18px",fontWeight:"900",color:"#fff"}}>{newBadge.name}</div>
-            <div style={{fontSize:"13px",color:"rgba(255,255,255,0.9)"}}>{newBadge.desc}</div>
+            <div style={{fontSize:"13px",color:"rgba(255,255,255,0.9)"}}>{pn(newBadge.desc,state.profile&&state.profile.childName)}</div>
           </div>
         </div>
       )}
