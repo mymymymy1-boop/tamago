@@ -827,9 +827,55 @@ function migrateFields(d){
   if(d.quizAnsweredDate===undefined)d.quizAnsweredDate=null;
   if(!d.profile)d.profile={childName:"ときのすけくん",gender:"boy",schoolName:"けいおうよこはましょとうぶ",examDate:"2026-11-11"};
   if(!d.profile.examDate)d.profile.examDate="2026-11-11";
+  if(!d.profile.syncCode)d.profile.syncCode="";
   return d;
 }
-async function save(d){try{lsSet("tamago-v5",JSON.stringify(d));}catch(e){}}
+
+// ==================== FIREBASE SYNC ====================
+var FIREBASE_URL="https://tokinosukeapp-default-rtdb.asia-southeast1.firebasedatabase.app";
+var _fbListenerOff=null;
+
+function fbPath(code){return FIREBASE_URL+"/families/"+encodeURIComponent(code)+".json";}
+
+async function fbSave(code,data){
+  if(!code)return;
+  try{
+    await fetch(fbPath(code),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:data,updatedAt:Date.now()})});
+  }catch(e){console.log("Firebase save error",e);}
+}
+
+async function fbLoad(code){
+  if(!code)return null;
+  try{
+    var res=await fetch(fbPath(code));
+    if(!res.ok)return null;
+    var json=await res.json();
+    if(json&&json.data)return json.data;
+  }catch(e){console.log("Firebase load error",e);}
+  return null;
+}
+
+function fbListen(code,onData){
+  if(_fbListenerOff){_fbListenerOff();_fbListenerOff=null;}
+  if(!code)return;
+  try{
+    var es=new EventSource(fbPath(code));
+    es.addEventListener("put",function(e){
+      try{
+        var parsed=JSON.parse(e.data);
+        if(parsed&&parsed.path==="/"&&parsed.data&&parsed.data.data){onData(parsed.data.data);}
+      }catch(ex){}
+    });
+    es.onerror=function(){};
+    _fbListenerOff=function(){es.close();};
+  }catch(e){}
+}
+
+async function save(d){
+  try{lsSet("tamago-v5",JSON.stringify(d));}catch(e){}
+  // Also save to Firebase if sync code set
+  if(d&&d.profile&&d.profile.syncCode){fbSave(d.profile.syncCode,d);}
+}
 
 function mkDef(){
   var c=pick([]);
@@ -849,7 +895,7 @@ function mkDef(){
     streakDays:0,lastCompletedDate:null,
     dailyNote:"",dailyNoteDate:null,completedDates:[],
     unlockedBadges:[],stampHistory:[],quizAnsweredDate:null,
-    profile:{childName:"ときのすけくん",gender:"boy",schoolName:"けいおうよこはましょとうぶ",examDate:"2026-11-11"},
+    profile:{childName:"ときのすけくん",gender:"boy",schoolName:"けいおうよこはましょとうぶ",examDate:"2026-11-11",syncCode:""},
   };
 }
 
@@ -1141,6 +1187,7 @@ function InfoBar({dailyNote,onNoteChange,onSettingsClick,streakDays,profile}){
   var dayReading=DAY_READINGS[day];
   return (
     <div style={{background:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",borderRadius:"24px",padding:"18px 20px",color:"#fff",position:"relative",marginBottom:"16px",boxShadow:"0 8px 32px rgba(0,0,0,0.2)",overflow:"hidden",width:"100%",boxSizing:"border-box"}}>
+      {pr.syncCode&&<div style={{position:"absolute",top:"16px",right:"58px",fontSize:"11px",color:"rgba(255,255,255,0.5)",display:"flex",alignItems:"center",gap:"3px"}}><span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"#4CAF50"}}/>どうき</div>}
       <button onClick={onSettingsClick} style={{position:"absolute",top:"14px",right:"14px",background:"rgba(255,255,255,0.12)",border:"none",borderRadius:"50%",width:"38px",height:"38px",cursor:"pointer",fontSize:"18px",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>⚙️</button>
       <div style={{display:"flex",alignItems:"flex-end",gap:"12px",flexWrap:"wrap"}}>
         <div style={{fontFamily:"'Hiragino Maru Gothic Pro',sans-serif"}}>
@@ -1365,11 +1412,28 @@ function Settings({onBack,onReset,profile,onProfileChange}){
   var [pGender,setPGender]=useState((profile&&profile.gender)||"boy");
   var [pSchool,setPSchool]=useState((profile&&profile.schoolName)||"");
   var [pExam,setPExam]=useState((profile&&profile.examDate)||"2026-11-11");
+  var [pSync,setPSync]=useState((profile&&profile.syncCode)||"");
   var [saved,setSaved]=useState(false);
+  var [syncStatus,setSyncStatus]=useState("");
 
   function handleSaveProfile(){
-    onProfileChange({childName:pName,gender:pGender,schoolName:pSchool,examDate:pExam});
+    onProfileChange({childName:pName,gender:pGender,schoolName:pSchool,examDate:pExam,syncCode:pSync});
     setSaved(true);setTimeout(function(){setSaved(false);},2000);
+  }
+
+  function handleGenCode(){
+    var chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    var code="";for(var i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+    setPSync(code);
+  }
+
+  function handleTestSync(){
+    if(!pSync){setSyncStatus("コードを いれてね");return;}
+    setSyncStatus("かくにんちゅう...");
+    fbLoad(pSync).then(function(data){
+      if(data){setSyncStatus("✅ クラウドに データあり！せつぞく OK");}
+      else{setSyncStatus("🆕 あたらしい コード。ほぞんで どうき かいし！");}
+    }).catch(function(){setSyncStatus("❌ つうしん エラー");});
   }
 
   if(!authed){
@@ -1431,6 +1495,33 @@ function Settings({onBack,onReset,profile,onProfileChange}){
           style={{width:"100%",background:saved?"linear-gradient(135deg,#4CAF50,#66BB6A)":"linear-gradient(135deg,#4A90D9,#5BA3EC)",color:"#fff",border:"none",borderRadius:"14px",padding:"12px",fontSize:"16px",fontWeight:"800",cursor:"pointer",transition:"all 0.3s"}}>
           {saved?"✅ ほぞん しました！":"💾 プロフィールを ほぞん"}
         </button>
+      </div>
+
+      {/* Sync Settings */}
+      <div style={{background:"#fff",borderRadius:"20px",padding:"20px",marginBottom:"16px"}}>
+        <h3 style={{margin:"0 0 14px",fontSize:"17px"}}>🔄 クラウドどうき</h3>
+        <p style={{fontSize:"13px",color:"#888",margin:"0 0 12px",lineHeight:"1.6"}}>
+          おなじ「かぞくコード」を いれると、スマホ・iPad・パソコンで データが じどう どうきされます。
+        </p>
+
+        <label style={labelStyle}>かぞくコード</label>
+        <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
+          <input type="text" value={pSync} onChange={function(e){setPSync(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,10));}}
+            placeholder="例: TOKI26" maxLength={10}
+            style={{flex:1,fontSize:"18px",padding:"10px 14px",borderRadius:"12px",border:"2px solid #E0E0E0",outline:"none",fontFamily:"monospace",letterSpacing:"3px",textAlign:"center"}}/>
+          <button onClick={handleGenCode}
+            style={{background:"#E3F2FD",border:"2px solid #90CAF9",borderRadius:"12px",padding:"10px 12px",fontSize:"13px",fontWeight:"700",cursor:"pointer",color:"#1565C0",whiteSpace:"nowrap"}}>
+            🎲 じどう
+          </button>
+        </div>
+        <button onClick={handleTestSync}
+          style={{width:"100%",background:"#F5F5F5",border:"2px solid #E0E0E0",borderRadius:"12px",padding:"10px",fontSize:"14px",fontWeight:"700",cursor:"pointer",color:"#555",marginBottom:"8px"}}>
+          📡 せつぞく テスト
+        </button>
+        {syncStatus&&<div style={{fontSize:"13px",color:"#4A90D9",textAlign:"center",padding:"4px 0"}}>{syncStatus}</div>}
+        <p style={{fontSize:"12px",color:"#aaa",margin:"8px 0 0",lineHeight:"1.5"}}>
+          ※ コードを しっている ひとは だれでも データに アクセスできます。かんたんな コードは さけてください。
+        </p>
       </div>
 
       {/* How to use */}
@@ -1873,13 +1964,14 @@ function TamagoHatch(){
   var [newBadge,setNewBadge]=useState(null);
   var [showQuiz,setShowQuiz]=useState(false);
   var toastTimer=useRef(null);var saveTimer=useRef(null);
+  var fbIgnoreNext=useRef(false);
 
   useEffect(function(){
     load().then(function(data){
       if(data){
+        data=migrateFields(data);
         var today=ds();
         if(data.todayTasksDate!==today){
-          // Record yesterday's stamps before resetting
           if(data.todayCompleted&&data.todayCompleted.length>0){
             var sh=data.stampHistory||[];
             sh.push({date:data.todayTasksDate,stamps:data.todayCompleted.length});
@@ -1895,15 +1987,39 @@ function TamagoHatch(){
         if(!data.stampHistory)data.stampHistory=[];
         if(data.quizAnsweredDate===undefined)data.quizAnsweredDate=null;
         setState(data);
+        // If sync code exists, load from Firebase (cloud wins)
+        if(data.profile&&data.profile.syncCode){
+          fbLoad(data.profile.syncCode).then(function(cloud){
+            if(cloud){
+              cloud=migrateFields(cloud);
+              cloud.profile=Object.assign({},cloud.profile,{syncCode:data.profile.syncCode});
+              setState(cloud);
+            }
+          });
+        }
       }else{setState(mkDef());}
       setLoaded(true);
     });
   },[]);
 
+  // Firebase real-time listener
+  useEffect(function(){
+    if(!state||!state.profile||!state.profile.syncCode)return;
+    fbListen(state.profile.syncCode,function(cloudData){
+      if(fbIgnoreNext.current){fbIgnoreNext.current=false;return;}
+      if(cloudData){
+        var cd=migrateFields(cloudData);
+        cd.profile=Object.assign({},cd.profile,{syncCode:state.profile.syncCode});
+        setState(cd);
+      }
+    });
+    return function(){if(_fbListenerOff){_fbListenerOff();_fbListenerOff=null;}};
+  },[state&&state.profile&&state.profile.syncCode]);
+
   useEffect(function(){
     if(!loaded||!state)return;
     if(saveTimer.current)clearTimeout(saveTimer.current);
-    saveTimer.current=setTimeout(function(){save(state);},300);
+    saveTimer.current=setTimeout(function(){fbIgnoreNext.current=true;save(state);},300);
   },[state,loaded]);
 
   // Badge checker
